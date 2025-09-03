@@ -15,8 +15,8 @@ if (!is_dir($dir)) {
 $pdf = new TCPDF();
 
 // Désactiver header et footer automatiques
-$pdf->setPrintHeader(false);
-$pdf->setPrintFooter(false);
+//$pdf->setPrintHeader(false);
+//$pdf->setPrintFooter(false);
 $pdf->AddPage();
 $titre = "GENERATION D'UN PDF AVEC TCPDF";
 
@@ -34,45 +34,60 @@ $pdf->MultiCell(0, 10, "Ceci est un texte très long qui sera automatiquement co
 $val = "zero macabo" ;
 
 
-$html = <<<EOD
-<h2 style="text-align:center;">Liste des Stagiaires</h2>
-<table border="1" cellpadding="6">
-  <tr style="background-color:#d9edf7; font-weight:bold; text-align:center;">
-    <th width="80">Nom</th>
-    <th width="80">Prénom</th>
-    <th width="100">Programme</th>
-    <th width="80">Date Début</th>
-    <th width="80">Date Fin</th>
-    <th width="80">Statut</th>
-  </tr>
-  <tr>
-    <td>Kameni</td>
-    <td>Alice</td>
-    <td>Dév. Web</td>
-    <td>05/08/2025</td>
-    <td>05/11/2025</td>
-    <td>Confirmée</td>
-  </tr>
-  <tr>
-    <td>Dupont</td>
-    <td>Jean</td>
-    <td>Réseaux</td>
-    <td>12/08/2025</td>
-    <td>12/11/2025</td>
-    <td>En attente</td>
-  </tr>
-  <tr>
-    <td>Smith</td>
-    <td>Maria</td>
-    <td>Infographie</td>
-    <td>20/08/2025</td>
-    <td>20/11/2025</td>
-    <td>Confirmée</td>
-  </tr>
-</table>
-EOD;
+//Création d'une classe héritée
+class MYPDF extends TCPDF {
 
-$pdf->writeHTML($html, true, false, true, false, '');
+    // En-tête
+    public function Header() {
+        // Logo
+        /*$image_file = __DIR__.'/logo.png'; // mets ton logo ici
+        if (file_exists($image_file)) {
+            $this->Image($image_file, 10, 10, 20, '', 'PNG');
+        }*/
+
+        // Titre
+        $this->SetFont('helvetica', 'B', 14);
+        $this->Cell(0, 15, 'Mon Application - Liste des Stagiaires', 'B', 1, 'C');
+        $this->Ln(5); // espace
+    }
+
+    // Pied de page
+    public function Footer() {
+        // Position à 15 mm du bas
+        $this->SetY(-15);
+
+        // Police
+        $this->SetFont('helvetica', 'I', 10);
+
+        date_default_timezone_set('Africa/Douala');
+        $today = date('d/m/Y H:i');
+
+        $this->Cell(0, 10, 'Document généré le' . ' ' . $today , 0, 0, 'L');
+
+
+        // Numéro de page
+        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().' / '.$this->getAliasNbPages(), 0, 0, 'C');
+    }
+}
+
+//  Utilisation de la classe
+$pdf = new MYPDF();
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Moi');
+$pdf->SetTitle('PDF avec en-tête et pied de page');
+
+// Ajout de la page
+$pdf->AddPage();
+
+// Contenu
+$pdf->SetFont('dejavusans', '', 12);
+/*$html = "<h2>Liste des Stagiaires</h2>
+<p>Voici un exemple de document avec en-tête et pied de page.</p>";*/
+$pdf->SetFont('helvetica', 'B', 15);
+$pdf->Cell(0, 10, '' , 0, 1, 'L');
+
+$pdf->Cell(0, 10, 'Document généré le' , 0, 1, 'L');
+//$pdf->writeHTML($html, true, false, true, false, '');
 
 $pdfFile = $dir . "test4.pdf";
 $pdf->Output($pdfFile, 'D');
