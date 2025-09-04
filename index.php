@@ -40,14 +40,16 @@ class MYPDF extends TCPDF {
     // En-tête
     public function Header() {
         // Logo
-        /*$image_file = __DIR__.'/logo.png'; // mets ton logo ici
+        $image_file = __DIR__.'/gestionclient.png'; // mets ton logo ici
         if (file_exists($image_file)) {
-            $this->Image($image_file, 10, 10, 20, '', 'PNG');
-        }*/
+            $this->Image($image_file, 10, 4, 55, 10, 'PNG');
+        }
+
+        
 
         // Titre
         $this->SetFont('helvetica', 'B', 14);
-        $this->Cell(0, 15, 'Mon Application - Liste des Stagiaires', 'B', 1, 'C');
+        $this->Cell(0, 18, 'Mon Application - Liste des Stagiaires', 'B', 1, 'R');
         $this->Ln(5); // espace
     }
 
@@ -79,6 +81,16 @@ $pdf->SetTitle('PDF avec en-tête et pied de page');
 // Ajout de la page
 $pdf->AddPage();
 
+// Image
+
+// Add Image
+//$pdf->Image('gestionclient.png', 15, 10, 100, 20, 'PNG');
+
+// Add Text
+$pdf->SetY(40); // Move text below image
+$pdf->SetFont('helvetica', '', 14);
+$pdf->Cell(0, 10, 'Company Invoice', 0, 1, 'C');
+
 // Contenu
 $pdf->SetFont('dejavusans', '', 12);
 /*$html = "<h2>Liste des Stagiaires</h2>
@@ -93,4 +105,6 @@ $pdfFile = $dir . "test4.pdf";
 $pdf->Output($pdfFile, 'D');
 
 echo "✅ PDF généré avec succès : $pdfFile";
+header('location:index.php');
+
 
